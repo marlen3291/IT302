@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+
+<script type="text/javascript">
+
+$(document).ready(function(){
+
+	$("#slider1").slider({
+		
+		value: 50,
+		max:  100,
+		min:    0,
+		step: .01,
+		
+		change: function(event, ui){
+			temp=ui.value;
+			$(   "#associated"   ).val(  temp   )
+		}
+		
+		
+		});
+		
+	});
+</script>
+
+<input type=text id="associated" name="associated">
+
+</body>
+</html>

@@ -1,0 +1,151 @@
+<?php # Script 18.1 - header.html
+// This page begins the HTML header for the site.
+
+// Start output buffering:
+ob_start();
+
+session_set_cookie_params ( 0, "/~mll6/IT302/html/"); 
+//must be done before start to correctly override defaults
+//from session_start() 	 
+//1st argument 0 makes cookie disappear at end of session
+//2nd argument overrides path default on system which is "/"
+//as indicated if use phpinfo();
+
+// Initialize a session:
+session_start();
+
+$sidvalue = session_id();
+
+//changes duration of cookie to 5 minutes from now
+//each time it runs, now changes	
+//
+//name, value and path must be same else
+//else will refer to different cookie			
+setcookie(  						
+    'PHPSESSID',			//name  
+    $sidvalue,				//value  
+    time() + 300,  
+	"/~mll6/IT302/html/"		 
+); 
+
+// Check for a $page_title value:
+if (!isset($page_title)) {
+	$page_title = 'User Registration';
+}
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<title><?php echo $page_title; ?></title>
+	<style type="text/css" media="screen">@import "includes/layout.css";</style>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+	<!-- Added links for ajax-->
+	<link   href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
+	<script  src="https://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
+	<script  src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+	<!-- -->
+<!--Code for toggle-->
+<script>
+$(document).ready(function(){
+    $("button").click(function(){
+        $("#Menu a").toggle();
+    });
+});
+<!--Code for toggle-->
+</script>
+
+<script>
+
+$(document).ready(function(){
+
+var r = 10 - Math.floor((Math.random()*20));
+var s = 1 + (Math.random()*0.3);
+$("#captchimage").css('transform', 'rotate(' + r + 'deg) scale(' + s + ")");
+
+setInterval(function(){
+	
+var r = 10 - Math.floor((Math.random()*20));
+var s = 1 + (Math.random()*.3);
+$("#captchaimage").css('transform', 'rotate(' + r + 'deg) scale(' + s + ")");
+}, 1000);
+});
+
+
+</script>
+<!--Code for slider-->
+<script type="text/javascript"> 
+		
+$(document).ready(function(){
+		var p;   //makes global p used in clearTimeout to terminate delayed function calls
+		var s; 
+		
+		$("#slide_me").slider(  		
+			{	value: 	50 	,   
+				min: 	0	,
+				max: 	100	,
+				step:   0.1,
+				orientation:  'horizontal' ,
+
+				slide: function (  event, ui ){
+					
+					clearTimeout(p);
+					
+					
+					var temp = ui.value ;
+					$("#associated").val(temp);
+					//alert('hi');
+					
+				}   ,    										
+				
+				change: function (event, ui)
+				{   
+					
+				   $("#associatedchange").val(ui.value);  
+				  // alert('call function that calls ajax here');
+				   
+				   var s = $("#associatedchange").val() ;
+				   
+		//Syntax warning: watch out for commas in JSON (not semi-colons)
+		
+					$.ajax({
+							type: 	"POST"  ,
+							url: 	"who_logged_in3.php",
+							data: 	"u=" + s,
+							
+							beforeSend: function(){ $("#B").html("Loading...") ;},
+							
+							error:function(xhr, status, error) {
+								alert( "Error Mesaage:  \r\nNumeric code is: "  + xhr.status + " \r\nError is " + error);
+								},
+							
+							success: function(result){
+								$("#B").html(result);
+								}
+					});
+				}   
+			}
+		);
+		$("#associated").val(   $("#slide_me").slider("value")   );
+		$("#associatedchange").val(   $("#slide_me").slider("value")   );
+		
+		
+
+});
+		
+		//The following statement INITIALIZES THE SLIDER'S ASSOCIATED DISPLAY TEXT FIELD
+		//to the slider's initial [current] value: $("#slide_me").slider("value")
+		//The slide event handler  updates that WHENEVER THERE IS A SLIDE EVENT.
+		//But without this the slider associated field is Initially empty.
+		//THis is executed just once.
+		
+		
+</script>
+<!--Code for slider-->
+
+</head>
+<body>
+<div id="Header">User Registration</div>
+<div id="Content">
+<!-- End of Header -->
